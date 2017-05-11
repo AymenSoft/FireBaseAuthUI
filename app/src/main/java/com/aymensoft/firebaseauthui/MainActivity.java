@@ -25,13 +25,12 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         tvUser=(TextView)findViewById(R.id.tv_user);
         btnSignout=(Button)findViewById(R.id.btn_signout);
@@ -56,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
                             RC_SIGN_IN);
                 }else {
                     tvUser.setText(user.getDisplayName());
-                    //todo l'app crach ici
-                    firebaseDatabase=FirebaseDatabase.getInstance();
+                    //todo l'utilisateur est connecté, ouvrir la fenetre de discution
                 }
             }
         };
@@ -81,6 +79,18 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        firebaseAuth.removeAuthStateListener(authStateListener);
     }
 
     @Override
